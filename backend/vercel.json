@@ -5,21 +5,22 @@
       "src": "run.py",
       "use": "@vercel/python",
       "config": {
-        "maxLambdaSize": "10mb",
-        "runtime": "python3.9"
+        "maxLambdaSize": "5mb",
+        "runtime": "python3.9",
+        "excludeFiles": ["tests/**", "**/*.pyc", "**/__pycache__/**"]
       }
     }
   ],
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "/api/(.*)",
       "dest": "run.py"
     }
   ],
   "functions": {
     "run.py": {
-      "memory": 1024,
-      "maxDuration": 10
+      "memory": 512,
+      "maxDuration": 5
     }
   }
 }
