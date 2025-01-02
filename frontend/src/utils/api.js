@@ -1,11 +1,10 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const processImage = async (formData) => {
     try {
         const response = await fetch(`${API_BASE_URL}/api/process-image`, {
             method: 'POST',
             body: formData,
-            credentials: 'include',
             mode: 'cors',
             headers: {
                 'Accept': 'application/json',
@@ -13,8 +12,7 @@ export const processImage = async (formData) => {
         });
 
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Failed to process image');
+            throw new Error('Network response was not ok');
         }
 
         return await response.json();
