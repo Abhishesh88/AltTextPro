@@ -3,7 +3,24 @@ from flask_cors import CORS
 import os
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+# Configure CORS to accept all origins
+CORS(app, resources={
+    r"/*": {
+        "origins": "*",
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization", "Accept"],
+        "expose_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True,
+        "max_age": 600
+    }
+})
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    return response
 
 @app.route('/')
 def home():
@@ -18,8 +35,10 @@ def home():
 def favicon():
     return '', 204
 
-@app.route('/api/process-image', methods=['POST'])
+@app.route('/api/process-image', methods=['POST', 'OPTIONS'])
 def process_image():
+    if request.method == 'OPTIONS':
+        return '', 204
     try:
         return jsonify({"status": "ok"})
     except Exception as e:
